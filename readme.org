@@ -1,0 +1,17 @@
+* Zotfile Annotations to Readwise Exporter
+
+Simple python script for adding annotations extracted from [[http://zotfile.com/][Zotfile]] to [[https://readwise.io]].
+
+** Usage
+   Run ~annotations.py~ and input the title, author, and notes. Exports to a file called ~output.csv~ in the same folder.
+
+*** Example
+    #+begin_src sh
+      peixian@okda ~/c/zotfile-to-readwise-exporter> ./annotations.py
+      Title: test title
+      Author: fake author
+      Enter annotations. Ctrl-D to finish.
+      HERE IS A SINGLE NOTE
+      Highlight,Title,Author
+      HERE IS A SINGLE NOTE,test title,fake author
+    #+end_src
