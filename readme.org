@@ -3,17 +3,24 @@
 Simple python script for adding annotations extracted from [[http://zotfile.com/][Zotfile]] to [[https://readwise.io]]. Allows zotero users to easily move their annotations over to readwise for review without doing too much work. Ideally this would be improved if readwise offered an API.
 
 ** Usage
+   Create a ~ ~/.readwise ~ file at the root of your home directory with your readwise token (https://readwise.io/access_token).
+
+
+
    Run ~annotations.py~ and input the title, author, and notes. Exports to a file called ~output.csv~ in the same folder.
 
 *** Example
     #+begin_src sh
+      peixian@okda ~/c/zotfile-to-readwise-exporter (main)> cat ~/.readwise                                                          (base)
+      <MY_ACCESS_TOKEN>⏎
       peixian@okda ~/c/zotfile-to-readwise-exporter> ./annotations.py
       Title: test title
       Author: fake author
+      Type (must be 'book', 'article', or 'podcast'): article
       Enter annotations. Ctrl-D to finish.
       HERE IS A SINGLE NOTE
-      Highlight,Title,Author
-      HERE IS A SINGLE NOTE,test title,fake author
+      <Response [200]>
+      b'[{"id":6625270,"title":"The \xe2\x80\x98Youth Bulge\xe2\x80\x99 and Political Unrest in Iraq","author":"Asha Amirali","category":"books","num_highlights":1,"last_highlight_at":null,"updated":"2020-12-09T15:26:39.877931Z","cover_image_url":"https://readwise-assets.s3.amazonaws.com/static/images/default-book-icon-0.c6917d331b03.png","highlights_url":"https://readwise.io/bookreview/6625270","modified_highlights":[118065038]}]'
     #+end_src
 
 * License

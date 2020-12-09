@@ -4,6 +4,13 @@ import io
 import csv
 import sys
 import re
+import requests
+from pathlib import Path
+
+def parse_access_token(access_token_path):
+    with open(access_token_path, "r") as token:
+        t = token.readline()
+    return t
 
 def parse_zotero_format(line):
     """
@@ -24,32 +31,44 @@ def parse_zotero_format(line):
         return line, 0
 
 
-title = input("Title: ")
-author = input("Author: ")
-print("Enter annotations. Ctrl-D to finish.")
-annotations = []
-while True:
-    try:
-        line = input()
-    except EOFError:
-        break
 
-    if line and "Extracted Annotations" not in line:
-        l, location = parse_zotero_format(line)
-        annotations.append({
-            'Highlight': l,
-            'Title': title,
-            'Author': author,
+if __name__ == "__main__":
+    home = str(Path.home())
+    token = parse_access_token(f"{home}/.readwise")
+    print(f"Using token {token}")
+
+    title = input("Title: ")
+    author = input("Author: ")
+    type = 'article'
+    while True:
+        print("Type (must be 'book', 'article', or 'podcast'):", end="")
+        type = input().rstrip()
+        if type in ['book', 'article', 'podcast']:
+            break
+
+    print("Enter annotations. Ctrl-D to finish.")
+    annotations = []
+    while True:
+        try:
+            line = input()
+        except EOFError:
+            break
+
+        if line and "Extracted Annotations" not in line:
+            l, location = parse_zotero_format(line)
+            annotations.append({
+                'text': l,
+                'title': title,
+                'source_type': type,
+                'author': author,
             })
 
-output = io.StringIO()
-fieldnames = ['Highlight', 'Title', 'Author']
-writer = csv.DictWriter(output, fieldnames=fieldnames)
-writer.writeheader()
-for val in annotations:
-    writer.writerow(val)
-
-print(output.getvalue())
-
-with open('output.csv', 'w') as csvfile:
-    csvfile.write(output.getvalue())
+    resp = requests.post(
+        url="https://readwise.io/api/v2/highlights/",
+        headers={"Authorization": f"Token {token}"},
+        json={
+            "highlights": annotations
+        }
+    )
+    print(resp)
+    print(resp.content)
